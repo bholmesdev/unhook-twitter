@@ -73,6 +73,23 @@
       [data-testid="sidebarColumn"] section[aria-labelledby*="accessible-list"] {
         display: none !important;
       }
+    `,
+    
+    hideProfile: `
+      /* Hide profile button in sidebar */
+      a[href*="/profile"],
+      a[aria-label*="Profile"],
+      a[data-testid*="AppTabBar_Profile"],
+      nav a[href$="/profile"],
+      [role="navigation"] a[aria-label*="Profile"],
+      /* Hide parent containers */
+      li:has(a[href*="/profile"]),
+      li:has(a[aria-label*="Profile"]),
+      [role="listitem"]:has(a[href*="/profile"]),
+      [role="listitem"]:has(a[aria-label*="Profile"]),
+      div[role="tab"]:has(a[href*="/profile"]) {
+        display: none !important;
+      }
     `
   };
   
@@ -108,15 +125,18 @@
     chrome.storage.sync.get({
       hideNotifications: true,
       hideHomeFeed: true,
-      redirectNotifications: true
+      redirectNotifications: true,
+      hideProfile: false
     }, function(items) {
       config.hideNotifications = items.hideNotifications;
       config.hideHomeFeed = items.hideHomeFeed;
       config.redirectNotifications = items.redirectNotifications;
+      config.hideProfile = items.hideProfile;
       
       // Update CSS based on loaded settings
       updateCSS('hideNotifications', config.hideNotifications);
       updateCSS('hideHomeFeed', config.hideHomeFeed);
+      updateCSS('hideProfile', config.hideProfile);
     });
   }
   
@@ -124,11 +144,18 @@
   chrome.runtime.onMessage.addListener(function(request, sender, sendResponse) {
     if (request.action === 'updateCSS') {
       const settings = request.settings;
-      config.hideNotifications = settings.hideNotifications;
-      config.hideHomeFeed = settings.hideHomeFeed;
-      
-      updateCSS('hideNotifications', config.hideNotifications);
-      updateCSS('hideHomeFeed', config.hideHomeFeed);
+      if (settings.hideNotifications !== undefined) {
+        config.hideNotifications = settings.hideNotifications;
+        updateCSS('hideNotifications', config.hideNotifications);
+      }
+      if (settings.hideHomeFeed !== undefined) {
+        config.hideHomeFeed = settings.hideHomeFeed;
+        updateCSS('hideHomeFeed', config.hideHomeFeed);
+      }
+      if (settings.hideProfile !== undefined) {
+        config.hideProfile = settings.hideProfile;
+        updateCSS('hideProfile', config.hideProfile);
+      }
     }
     
     if (request.action === 'updateSettings') {
