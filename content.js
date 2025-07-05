@@ -57,6 +57,14 @@
         display: none !important;
       }
       
+      /* Hide "new posts" notification badge */
+      button[aria-label*="New posts are available"],
+      button[aria-label*="new posts"],
+      [role="button"]:has(span:contains("New posts")),
+      div[role="status"]:has(button[aria-label*="New posts"]) {
+        display: none !important;
+      }
+      
       /* Hide sidebar distractions */
       [data-testid="sidebarColumn"] [data-testid="trend"],
       [data-testid="sidebarColumn"] [data-testid="UserCell"],
