@@ -1,0 +1,14 @@
+# Chrome extension files
+*.crx
+*.pem
+*.zip
+
+# macOS
+.DS_Store
+
+# IDE
+.vscode/
+.idea/
+
+# Logs
+*.log
