@@ -4,7 +4,8 @@
   "version": "1.0",
   "description": "Strip down X.com interface to reduce distractions",
   "permissions": [
-    "activeTab"
+    "activeTab",
+    "storage"
   ],
   "host_permissions": [
     "https://x.com/*",
@@ -17,7 +18,6 @@
         "https://twitter.com/*"
       ],
       "js": ["content.js"],
-      "css": ["styles.css"],
       "run_at": "document_start"
     }
   ],

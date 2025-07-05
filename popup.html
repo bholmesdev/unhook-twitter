@@ -62,6 +62,84 @@
       font-size: 11px;
       color: #657786;
     }
+    
+    /* Toggle switch styles */
+    .toggle-group {
+      margin: 20px 0;
+    }
+    
+    .toggle-item {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin: 15px 0;
+      padding: 12px;
+      background: #f7f9fa;
+      border-radius: 8px;
+      border-left: 3px solid #1da1f2;
+    }
+    
+    .toggle-info {
+      flex: 1;
+    }
+    
+    .toggle-title {
+      font-weight: bold;
+      color: #14171a;
+      margin-bottom: 3px;
+      font-size: 14px;
+    }
+    
+    .toggle-desc {
+      font-size: 11px;
+      color: #657786;
+    }
+    
+    .toggle-switch {
+      position: relative;
+      display: inline-block;
+      width: 44px;
+      height: 24px;
+      margin-left: 10px;
+    }
+    
+    .toggle-switch input {
+      opacity: 0;
+      width: 0;
+      height: 0;
+    }
+    
+    .slider {
+      position: absolute;
+      cursor: pointer;
+      top: 0;
+      left: 0;
+      right: 0;
+      bottom: 0;
+      background-color: #ccc;
+      transition: .4s;
+      border-radius: 24px;
+    }
+    
+    .slider:before {
+      position: absolute;
+      content: "";
+      height: 18px;
+      width: 18px;
+      left: 3px;
+      bottom: 3px;
+      background-color: white;
+      transition: .4s;
+      border-radius: 50%;
+    }
+    
+    input:checked + .slider {
+      background-color: #1da1f2;
+    }
+    
+    input:checked + .slider:before {
+      transform: translateX(20px);
+    }
   </style>
 </head>
 <body>
@@ -70,27 +148,45 @@
     <div class="subtitle">Minimalist X.com Experience</div>
   </div>
   
-  <div class="feature">
-    <div class="feature-title">🔕 No Notifications</div>
-    <div class="feature-desc">Removes notification button and redirects notification pages</div>
-  </div>
-  
-  <div class="feature">
-    <div class="feature-title">📝 Compose Only</div>
-    <div class="feature-desc">Hides home feed, keeps only the compose area</div>
-  </div>
-  
-  <div class="feature">
-    <div class="feature-title">🎯 Focus Mode</div>
-    <div class="feature-desc">Eliminates distractions from trending and suggestions</div>
-  </div>
-  
-  <div class="status">
-    ✅ Active on X.com
+  <div class="toggle-group">
+    <div class="toggle-item">
+      <div class="toggle-info">
+        <div class="toggle-title">🔕 Hide Notifications</div>
+        <div class="toggle-desc">Remove notification button from sidebar</div>
+      </div>
+      <label class="toggle-switch">
+        <input type="checkbox" id="hideNotifications" checked>
+        <span class="slider"></span>
+      </label>
+    </div>
+    
+    <div class="toggle-item">
+      <div class="toggle-info">
+        <div class="toggle-title">📝 Hide Home Feed</div>
+        <div class="toggle-desc">Hide timeline, keep only compose area</div>
+      </div>
+      <label class="toggle-switch">
+        <input type="checkbox" id="hideHomeFeed" checked>
+        <span class="slider"></span>
+      </label>
+    </div>
+    
+    <div class="toggle-item">
+      <div class="toggle-info">
+        <div class="toggle-title">🔄 Redirect Notifications</div>
+        <div class="toggle-desc">Redirect notification pages to home</div>
+      </div>
+      <label class="toggle-switch">
+        <input type="checkbox" id="redirectNotifications" checked>
+        <span class="slider"></span>
+      </label>
+    </div>
   </div>
   
   <div class="footer">
     Refresh the page if changes don't appear immediately
   </div>
+  
+  <script src="popup.js"></script>
 </body>
 </html>
