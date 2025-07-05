@@ -1,0 +1,86 @@
+/* Unhook Twitter - Styles */
+/* Additional CSS rules to hide notification elements and home feed */
+
+/* Hide notification button in sidebar - comprehensive selectors */
+a[href="/notifications"],
+a[href*="/notifications"],
+a[data-testid="AppTabBar_Notifications_Link"],
+a[aria-label*="Notifications"],
+a[aria-label*="notifications"],
+nav a[href="/notifications"],
+nav a[href*="/notifications"],
+[role="navigation"] a[href="/notifications"],
+[role="navigation"] a[href*="/notifications"] {
+  display: none !important;
+}
+
+/* Hide parent containers of notification buttons */
+li:has(a[href="/notifications"]),
+li:has(a[href*="/notifications"]),
+li:has(a[data-testid="AppTabBar_Notifications_Link"]),
+[role="listitem"]:has(a[href="/notifications"]),
+[role="listitem"]:has(a[href*="/notifications"]),
+div[role="tab"]:has(a[href="/notifications"]) {
+  display: none !important;
+}
+
+/* Hide notification badge/indicators */
+[data-testid="notification-badge"],
+[aria-label*="notification"],
+.notification-badge,
+.badge[data-count],
+[data-testid="AppTabBar_Notifications_Link"] [data-testid="badge"] {
+  display: none !important;
+}
+
+/* Hide home feed timeline on home page */
+body[data-at-path="/home"] [data-testid="timeline"]:not(:has([data-testid="tweetTextarea_0"])),
+body[data-at-path="/home"] [aria-label*="Home timeline"]:not(:has([data-testid="tweetTextarea_0"])),
+body[data-at-path="/home"] article[data-testid="tweet"],
+body[data-at-path="/home"] div[data-testid="cellInnerDiv"]:not(:has([data-testid="tweetTextarea_0"])) {
+  display: none !important;
+}
+
+/* Alternative approach - hide tweets but keep compose area */
+body[data-at-path="/home"] [data-testid="primaryColumn"] section[role="region"] > div > div:not(:has([data-testid="tweetTextarea_0"])):not(:has([role="textbox"])) {
+  display: none !important;
+}
+
+/* Hide recommended follows and trending sections */
+[data-testid="sidebarColumn"] [data-testid="trend"],
+[data-testid="sidebarColumn"] [data-testid="UserCell"],
+[data-testid="sidebarColumn"] [data-testid="cellInnerDiv"],
+[aria-label*="Timeline: Trending now"],
+[aria-label*="Who to follow"],
+[data-testid="primaryColumn"] [data-testid="trend"] {
+  display: none !important;
+}
+
+/* Hide "What's happening" section */
+[data-testid="sidebarColumn"] section[aria-labelledby*="accessible-list"] {
+  display: none !important;
+}
+
+/* Ensure compose area remains visible */
+[data-testid="tweetTextarea_0"],
+[data-testid="tweet-text-editor"],
+[role="textbox"][data-testid="tweetTextarea_0"],
+[data-testid="toolBar"],
+[data-testid="tweet-button"],
+div:has([data-testid="tweetTextarea_0"]) {
+  display: block !important;
+}
+
+/* Clean up the layout after hiding elements */
+body[data-at-path="/home"] [data-testid="primaryColumn"] {
+  min-height: auto;
+}
+
+/* Hide notification-related elements in mobile view */
+@media (max-width: 768px) {
+  [data-testid="AppTabBar_Notifications_Link"],
+  [href="/notifications"],
+  [href*="/notifications"] {
+    display: none !important;
+  }
+}

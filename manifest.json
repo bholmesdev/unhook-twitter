@@ -1,0 +1,31 @@
+{
+  "manifest_version": 3,
+  "name": "Unhook Twitter",
+  "version": "1.0",
+  "description": "Strip down X.com interface to reduce distractions",
+  "permissions": [
+    "activeTab"
+  ],
+  "host_permissions": [
+    "https://x.com/*",
+    "https://twitter.com/*"
+  ],
+  "content_scripts": [
+    {
+      "matches": [
+        "https://x.com/*",
+        "https://twitter.com/*"
+      ],
+      "js": ["content.js"],
+      "css": ["styles.css"],
+      "run_at": "document_start"
+    }
+  ],
+  "background": {
+    "service_worker": "background.js"
+  },
+  "action": {
+    "default_popup": "popup.html",
+    "default_title": "Unhook Twitter"
+  }
+}
