@@ -8,7 +8,8 @@
   const config = {
     removeNotifications: true,
     removeHomeFeed: true,
-    redirectNotifications: true
+    redirectNotifications: true,
+    cleanTitle: true
   };
 
   // Redirect notifications page to home
@@ -49,6 +50,18 @@
         }
       });
     });
+  }
+
+  // Clean page title to remove notification count
+  function cleanPageTitle() {
+    const title = document.title;
+    
+    // Remove notification count pattern like "(12) Home / X" -> "Home / X"
+    const cleanedTitle = title.replace(/^\(\d+\)\s*/, '');
+    
+    if (title !== cleanedTitle) {
+      document.title = cleanedTitle;
+    }
   }
 
   // Remove home feed timeline
@@ -110,6 +123,10 @@
     if (config.removeHomeFeed) {
       removeHomeFeed();
     }
+    
+    if (config.cleanTitle) {
+      cleanPageTitle();
+    }
   }
 
   // Observer to handle dynamic content loading
@@ -129,12 +146,32 @@
     }
   });
 
+  // Observer specifically for title changes
+  const titleObserver = new MutationObserver(function(mutations) {
+    mutations.forEach(function(mutation) {
+      if (mutation.type === 'childList' && mutation.target.nodeName === 'TITLE') {
+        if (config.cleanTitle) {
+          cleanPageTitle();
+        }
+      }
+    });
+  });
+
   // Start observing
   function startObserving() {
     observer.observe(document.body, {
       childList: true,
       subtree: true
     });
+    
+    // Also observe title changes
+    const titleElement = document.querySelector('title');
+    if (titleElement) {
+      titleObserver.observe(titleElement.parentNode, {
+        childList: true,
+        subtree: true
+      });
+    }
   }
 
   // Initialize when DOM is ready
