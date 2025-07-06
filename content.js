@@ -1,9 +1,9 @@
 // Unhook Twitter - Content Script
 // Handles dynamic CSS injection, redirects and title cleanup
 
-(function() {
+(function () {
   'use strict';
-  
+
   // Configuration - will be updated from storage
   let config = {
     hideNotifications: true,
@@ -11,7 +11,7 @@
     redirectNotifications: true,
     cleanTitle: true
   };
-  
+
   // CSS Rules for different features
   const cssRules = {
     hideNotifications: `
@@ -45,7 +45,7 @@
         display: none !important;
       }
     `,
-    
+
     hideHomeFeed: `
       /* Hide home feed timeline */
       [data-testid="timeline"] article[data-testid="tweet"],
@@ -74,7 +74,7 @@
         display: none !important;
       }
     `,
-    
+
     hideProfile: `
       /* Hide profile button in sidebar */
       a[href*="/profile"],
@@ -92,13 +92,13 @@
       }
     `
   };
-  
+
   let injectedStyles = new Map();
-  
+
   // Inject or remove CSS based on feature toggle
   function updateCSS(feature, enabled) {
     const styleId = `unhook-twitter-${feature}`;
-    
+
     if (enabled) {
       // Inject CSS if not already present
       if (!injectedStyles.has(feature)) {
@@ -119,7 +119,7 @@
       }
     }
   }
-  
+
   // Load settings from storage and apply
   function loadSettings() {
     chrome.storage.sync.get({
@@ -127,21 +127,21 @@
       hideHomeFeed: true,
       redirectNotifications: true,
       hideProfile: false
-    }, function(items) {
+    }, function (items) {
       config.hideNotifications = items.hideNotifications;
       config.hideHomeFeed = items.hideHomeFeed;
       config.redirectNotifications = items.redirectNotifications;
       config.hideProfile = items.hideProfile;
-      
+
       // Update CSS based on loaded settings
       updateCSS('hideNotifications', config.hideNotifications);
       updateCSS('hideHomeFeed', config.hideHomeFeed);
       updateCSS('hideProfile', config.hideProfile);
     });
   }
-  
+
   // Listen for messages from popup
-  chrome.runtime.onMessage.addListener(function(request, sender, sendResponse) {
+  chrome.runtime.onMessage.addListener(function (request, sender, sendResponse) {
     if (request.action === 'updateCSS') {
       const settings = request.settings;
       if (settings.hideNotifications !== undefined) {
@@ -157,7 +157,7 @@
         updateCSS('hideProfile', config.hideProfile);
       }
     }
-    
+
     if (request.action === 'updateSettings') {
       const settings = request.settings;
       config.redirectNotifications = settings.redirectNotifications;
@@ -176,47 +176,18 @@
   // Clean page title to remove notification count
   function cleanPageTitle() {
     const title = document.title;
-    
+
     // Remove notification count pattern like "(12) Home / X" -> "Home / X"
     const cleanedTitle = title.replace(/^\(\d+\)\s*/, '');
-    
+
     if (title !== cleanedTitle) {
       document.title = cleanedTitle;
     }
   }
 
-
-  // Main function to apply all modifications
-  function applyModifications() {
-    if (config.redirectNotifications) {
-      redirectNotificationsToHome();
-    }
-    
-    if (config.cleanTitle) {
-      cleanPageTitle();
-    }
-  }
-
-  // Observer to handle dynamic content loading
-  const observer = new MutationObserver(function(mutations) {
-    let shouldReapply = false;
-    
-    mutations.forEach(function(mutation) {
-      if (mutation.type === 'childList' && mutation.addedNodes.length > 0) {
-        shouldReapply = true;
-      }
-    });
-    
-    if (shouldReapply) {
-      // Debounce the reapplication
-      clearTimeout(window.unhookTwitterTimeout);
-      window.unhookTwitterTimeout = setTimeout(applyModifications, 100);
-    }
-  });
-
   // Observer specifically for title changes
-  const titleObserver = new MutationObserver(function(mutations) {
-    mutations.forEach(function(mutation) {
+  const titleObserver = new MutationObserver(function (mutations) {
+    mutations.forEach(function (mutation) {
       if (mutation.type === 'childList' && mutation.target.nodeName === 'TITLE') {
         if (config.cleanTitle) {
           cleanPageTitle();
@@ -225,39 +196,30 @@
     });
   });
 
-  // Start observing
-  function startObserving() {
-    observer.observe(document.body, {
-      childList: true,
-      subtree: true
-    });
-    
-    // Also observe title changes
+  function observeTitle() {
     const titleElement = document.querySelector('title');
+    console.log('observeTitle', titleElement);
     if (titleElement) {
       titleObserver.observe(titleElement.parentNode, {
         childList: true,
         subtree: true
       });
+    } else {
+      // If no title exists, retry after a short delay
+      setTimeout(observeTitle, 100);
     }
   }
 
   // Initialize when DOM is ready
   if (document.readyState === 'loading') {
-    document.addEventListener('DOMContentLoaded', function() {
+    document.addEventListener('DOMContentLoaded', function () {
       loadSettings();
-      applyModifications();
-      startObserving();
+      redirectNotificationsToHome();
+      observeTitle();
     });
   } else {
     loadSettings();
-    applyModifications();
-    startObserving();
+    redirectNotificationsToHome();
+    observeTitle();
   }
-
-  // Also run on page navigation (for SPA behavior)
-  window.addEventListener('popstate', applyModifications);
-  
-  // Run periodically to catch any missed elements
-  setInterval(applyModifications, 2000);
 })();
