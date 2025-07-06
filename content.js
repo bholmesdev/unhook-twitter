@@ -145,6 +145,9 @@
       // Update CSS based on loaded settings
       updateCSS('hideNotifications', config.hideNotifications);
       updateFeedHiding();
+      
+      // Check for redirect after settings are loaded
+      redirectNotificationsToHome();
     });
   }
 
@@ -168,8 +171,10 @@
     }
   });
 
-  // Redirect notifications page to home
+  // Redirect notifications page to home (only if enabled)
   function redirectNotificationsToHome() {
+    if (!config.redirectNotifications) return;
+    
     const currentPath = window.location.pathname;
     if (currentPath === '/notifications' || currentPath.startsWith('/notifications/')) {
       window.location.href = 'https://x.com/home';
@@ -237,12 +242,10 @@
   if (document.readyState === 'loading') {
     document.addEventListener('DOMContentLoaded', function () {
       loadSettings();
-      redirectNotificationsToHome();
       observeTitle();
     });
   } else {
     loadSettings();
-    redirectNotificationsToHome();
     observeTitle();
   }
 })();
