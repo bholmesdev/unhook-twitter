@@ -58,10 +58,7 @@
       }
       
       /* Hide "new posts" notification badge */
-      button[aria-label*="New posts are available"],
-      button[aria-label*="new posts"],
-      [role="button"]:has(span:contains("New posts")),
-      div[role="status"]:has(button[aria-label*="New posts"]) {
+      [aria-label*="New posts are available"] {
         display: none !important;
       }
       
