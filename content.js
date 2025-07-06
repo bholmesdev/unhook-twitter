@@ -47,6 +47,11 @@
     `,
 
     hideFeeds: `
+      /* Hide For You and Following navigation tabs (but not compose toolbar) */
+      [aria-label*="Home timeline"] nav[role="navigation"]:not([data-testid="toolBar"] *) {
+        display: none !important;
+      }
+      
       /* Hide home feed timeline */
       [data-testid="timeline"] article[data-testid="tweet"],
       [data-testid="timeline"] div[data-testid="cellInnerDiv"]:not(:has([data-testid="tweetTextarea_0"])),
