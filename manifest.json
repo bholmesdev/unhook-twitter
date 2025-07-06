@@ -3,6 +3,12 @@
   "name": "Unhook Twitter",
   "version": "1.0",
   "description": "Strip down X.com interface to reduce distractions",
+  "icons": {
+    "16": "icons/icon16.png",
+    "32": "icons/icon32.png",
+    "48": "icons/icon48.png",
+    "128": "icons/icon128.png"
+  },
   "permissions": [
     "activeTab",
     "storage"
