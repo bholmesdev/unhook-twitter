@@ -214,13 +214,14 @@
         if (config.cleanTitle) {
           cleanPageTitle();
         }
+        // Check for route changes when title changes
+        checkForRouteChange();
       }
     });
   });
 
   function observeTitle() {
     const titleElement = document.querySelector('title');
-    console.log('observeTitle', titleElement);
     if (titleElement) {
       titleObserver.observe(titleElement.parentNode, {
         childList: true,
@@ -232,18 +233,26 @@
     }
   }
 
+  // Route change detection tied to title changes
+  let currentPath = window.location.pathname;
+  
+  function checkForRouteChange() {
+    if (window.location.pathname !== currentPath) {
+      currentPath = window.location.pathname;
+      updateFeedHiding();
+    }
+  }
+
   // Initialize when DOM is ready
   if (document.readyState === 'loading') {
     document.addEventListener('DOMContentLoaded', function () {
       loadSettings();
       redirectNotificationsToHome();
       observeTitle();
-      updateFeedHiding();
     });
   } else {
     loadSettings();
     redirectNotificationsToHome();
     observeTitle();
-    updateFeedHiding();
   }
 })();
