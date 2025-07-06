@@ -72,22 +72,6 @@
       }
     `,
 
-    hideProfile: `
-      /* Hide profile button in sidebar */
-      a[href*="/profile"],
-      a[aria-label*="Profile"],
-      a[data-testid*="AppTabBar_Profile"],
-      nav a[href$="/profile"],
-      [role="navigation"] a[aria-label*="Profile"],
-      /* Hide parent containers */
-      li:has(a[href*="/profile"]),
-      li:has(a[aria-label*="Profile"]),
-      [role="listitem"]:has(a[href*="/profile"]),
-      [role="listitem"]:has(a[aria-label*="Profile"]),
-      div[role="tab"]:has(a[href*="/profile"]) {
-        display: none !important;
-      }
-    `
   };
 
   let injectedStyles = new Map();
@@ -147,17 +131,14 @@
     chrome.storage.sync.get({
       hideNotifications: true,
       feedHideMode: 'home', // 'none', 'home', 'all'
-      redirectNotifications: true,
-      hideProfile: false
+      redirectNotifications: true
     }, function (items) {
       config.hideNotifications = items.hideNotifications;
       config.feedHideMode = items.feedHideMode;
       config.redirectNotifications = items.redirectNotifications;
-      config.hideProfile = items.hideProfile;
 
       // Update CSS based on loaded settings
       updateCSS('hideNotifications', config.hideNotifications);
-      updateCSS('hideProfile', config.hideProfile);
       updateFeedHiding();
     });
   }
@@ -173,10 +154,6 @@
       if (settings.feedHideMode !== undefined) {
         config.feedHideMode = settings.feedHideMode;
         updateFeedHiding();
-      }
-      if (settings.hideProfile !== undefined) {
-        config.hideProfile = settings.hideProfile;
-        updateCSS('hideProfile', config.hideProfile);
       }
     }
 

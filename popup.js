@@ -5,19 +5,16 @@ document.addEventListener('DOMContentLoaded', function() {
   const hideNotificationsToggle = document.getElementById('hideNotifications');
   const hideFeedDropdown = document.getElementById('hideFeedDropdown');
   const redirectNotificationsToggle = document.getElementById('redirectNotifications');
-  const hideProfileToggle = document.getElementById('hideProfile');
 
   // Load saved settings
   chrome.storage.sync.get({
     hideNotifications: true,
     feedHideMode: 'home', // 'none', 'home', 'all'
-    redirectNotifications: true,
-    hideProfile: false
+    redirectNotifications: true
   }, function(items) {
     hideNotificationsToggle.checked = items.hideNotifications;
     hideFeedDropdown.value = items.feedHideMode;
     redirectNotificationsToggle.checked = items.redirectNotifications;
-    hideProfileToggle.checked = items.hideProfile;
   });
 
   // Save settings when toggles change
@@ -39,12 +36,6 @@ document.addEventListener('DOMContentLoaded', function() {
     updateContentScript();
   });
 
-  hideProfileToggle.addEventListener('change', function() {
-    const settings = { hideProfile: this.checked };
-    chrome.storage.sync.set(settings);
-    updateCSS();
-  });
-
   // Update CSS injection based on settings
   function updateCSS() {
     chrome.tabs.query({active: true, currentWindow: true}, function(tabs) {
@@ -53,8 +44,7 @@ document.addEventListener('DOMContentLoaded', function() {
           action: 'updateCSS',
           settings: {
             hideNotifications: hideNotificationsToggle.checked,
-            feedHideMode: hideFeedDropdown.value,
-            hideProfile: hideProfileToggle.checked
+            feedHideMode: hideFeedDropdown.value
           }
         });
       }
