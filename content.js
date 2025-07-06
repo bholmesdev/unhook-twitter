@@ -205,9 +205,10 @@
   function observeTitle() {
     const titleElement = document.querySelector('title');
     if (titleElement) {
-      titleObserver.observe(titleElement.parentNode, {
+      // Only observe the title element itself, not the entire head
+      titleObserver.observe(titleElement, {
         childList: true,
-        subtree: true
+        characterData: true
       });
     } else {
       // If no title exists, retry after a short delay
@@ -217,12 +218,19 @@
 
   // Route change detection tied to title changes
   let currentPath = window.location.pathname;
+  let routeCheckTimeout = null;
   
   function checkForRouteChange() {
-    if (window.location.pathname !== currentPath) {
-      currentPath = window.location.pathname;
-      updateFeedHiding();
-    }
+    // Throttle route checks to avoid excessive calls
+    if (routeCheckTimeout) return;
+    
+    routeCheckTimeout = setTimeout(() => {
+      if (window.location.pathname !== currentPath) {
+        currentPath = window.location.pathname;
+        updateFeedHiding();
+      }
+      routeCheckTimeout = null;
+    }, 100);
   }
 
   // Initialize when DOM is ready
