@@ -141,6 +141,29 @@
     input:checked+.slider:before {
       transform: translateX(20px);
     }
+
+    /* Dropdown styles */
+    .dropdown-select {
+      margin-left: 10px;
+      padding: 6px 12px;
+      border: 1px solid #ccc;
+      border-radius: 6px;
+      background-color: white;
+      color: #14171a;
+      font-size: 12px;
+      cursor: pointer;
+      min-width: 100px;
+    }
+
+    .dropdown-select:focus {
+      outline: none;
+      border-color: #1da1f2;
+      box-shadow: 0 0 0 2px rgba(29, 161, 242, 0.2);
+    }
+
+    .dropdown-select option {
+      padding: 6px;
+    }
   </style>
 </head>
 
@@ -175,13 +198,14 @@
 
     <div class="toggle-item">
       <div class="toggle-info">
-        <div class="toggle-title">📝 Hide Home Feed</div>
-        <div class="toggle-desc">Hide timeline, keep only compose area</div>
+        <div class="toggle-title">📝 Hide Feed</div>
+        <div class="toggle-desc">Choose which feeds to hide</div>
       </div>
-      <label class="toggle-switch">
-        <input type="checkbox" id="hideHomeFeed" checked>
-        <span class="slider"></span>
-      </label>
+      <select class="dropdown-select" id="hideFeedDropdown">
+        <option value="none">None</option>
+        <option value="home">Home feed</option>
+        <option value="all">All feeds</option>
+      </select>
     </div>
 
     <div class="toggle-item">

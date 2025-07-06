@@ -1,21 +1,21 @@
 // Popup script for Unhook Twitter extension
 
 document.addEventListener('DOMContentLoaded', function() {
-  // Get toggle elements
+  // Get elements
   const hideNotificationsToggle = document.getElementById('hideNotifications');
-  const hideHomeFeedToggle = document.getElementById('hideHomeFeed');
+  const hideFeedDropdown = document.getElementById('hideFeedDropdown');
   const redirectNotificationsToggle = document.getElementById('redirectNotifications');
   const hideProfileToggle = document.getElementById('hideProfile');
 
   // Load saved settings
   chrome.storage.sync.get({
     hideNotifications: true,
-    hideHomeFeed: true,
+    feedHideMode: 'home', // 'none', 'home', 'all'
     redirectNotifications: true,
     hideProfile: false
   }, function(items) {
     hideNotificationsToggle.checked = items.hideNotifications;
-    hideHomeFeedToggle.checked = items.hideHomeFeed;
+    hideFeedDropdown.value = items.feedHideMode;
     redirectNotificationsToggle.checked = items.redirectNotifications;
     hideProfileToggle.checked = items.hideProfile;
   });
@@ -27,8 +27,8 @@ document.addEventListener('DOMContentLoaded', function() {
     updateCSS();
   });
 
-  hideHomeFeedToggle.addEventListener('change', function() {
-    const settings = { hideHomeFeed: this.checked };
+  hideFeedDropdown.addEventListener('change', function() {
+    const settings = { feedHideMode: this.value };
     chrome.storage.sync.set(settings);
     updateCSS();
   });
@@ -53,7 +53,7 @@ document.addEventListener('DOMContentLoaded', function() {
           action: 'updateCSS',
           settings: {
             hideNotifications: hideNotificationsToggle.checked,
-            hideHomeFeed: hideHomeFeedToggle.checked,
+            feedHideMode: hideFeedDropdown.value,
             hideProfile: hideProfileToggle.checked
           }
         });

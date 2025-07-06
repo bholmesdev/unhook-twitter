@@ -7,7 +7,7 @@
   // Configuration - will be updated from storage
   let config = {
     hideNotifications: true,
-    hideHomeFeed: true,
+    feedHideMode: 'home', // 'none', 'home', 'all'
     redirectNotifications: true,
     cleanTitle: true
   };
@@ -46,7 +46,7 @@
       }
     `,
 
-    hideHomeFeed: `
+    hideFeeds: `
       /* Hide home feed timeline */
       [data-testid="timeline"] article[data-testid="tweet"],
       [data-testid="timeline"] div[data-testid="cellInnerDiv"]:not(:has([data-testid="tweetTextarea_0"])),
@@ -117,23 +117,48 @@
     }
   }
 
+  // Detect current route type
+  function getCurrentRoute() {
+    const path = window.location.pathname;
+    if (path === '/home' || path === '/') {
+      return 'home';
+    } else if (path.startsWith('/') && path.match(/^\/.+$/)) {
+      return 'profile';
+    }
+    return 'other';
+  }
+
+  // Update feed hiding based on current route and settings
+  function updateFeedHiding() {
+    const currentRoute = getCurrentRoute();
+    const { feedHideMode } = config;
+
+    updateCSS('hideFeeds', false);
+
+    if (feedHideMode === 'home' && currentRoute === 'home') {
+      updateCSS('hideFeeds', true);
+    } else if (feedHideMode === 'all') {
+      updateCSS('hideFeeds', true);
+    }
+  }
+
   // Load settings from storage and apply
   function loadSettings() {
     chrome.storage.sync.get({
       hideNotifications: true,
-      hideHomeFeed: true,
+      feedHideMode: 'home', // 'none', 'home', 'all'
       redirectNotifications: true,
       hideProfile: false
     }, function (items) {
       config.hideNotifications = items.hideNotifications;
-      config.hideHomeFeed = items.hideHomeFeed;
+      config.feedHideMode = items.feedHideMode;
       config.redirectNotifications = items.redirectNotifications;
       config.hideProfile = items.hideProfile;
 
       // Update CSS based on loaded settings
       updateCSS('hideNotifications', config.hideNotifications);
-      updateCSS('hideHomeFeed', config.hideHomeFeed);
       updateCSS('hideProfile', config.hideProfile);
+      updateFeedHiding();
     });
   }
 
@@ -145,9 +170,9 @@
         config.hideNotifications = settings.hideNotifications;
         updateCSS('hideNotifications', config.hideNotifications);
       }
-      if (settings.hideHomeFeed !== undefined) {
-        config.hideHomeFeed = settings.hideHomeFeed;
-        updateCSS('hideHomeFeed', config.hideHomeFeed);
+      if (settings.feedHideMode !== undefined) {
+        config.feedHideMode = settings.feedHideMode;
+        updateFeedHiding();
       }
       if (settings.hideProfile !== undefined) {
         config.hideProfile = settings.hideProfile;
@@ -213,10 +238,12 @@
       loadSettings();
       redirectNotificationsToHome();
       observeTitle();
+      updateFeedHiding();
     });
   } else {
     loadSettings();
     redirectNotificationsToHome();
     observeTitle();
+    updateFeedHiding();
   }
 })();
