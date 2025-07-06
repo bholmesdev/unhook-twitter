@@ -23,47 +23,16 @@ Once installed, the extension works automatically on:
 - `https://x.com/*`
 - `https://twitter.com/*`
 
-### What it does:
-
-1. **Removes notification button**: The notification bell icon is completely hidden from the sidebar navigation
-2. **Redirects notification pages**: If you somehow navigate to `/notifications`, you'll be redirected to `/home`
-3. **Hides home feed**: On the home page, all tweets are hidden, leaving only the compose area
-4. **Removes distractions**: Trending topics and suggested follows are also hidden
-
-### To verify it's working:
-
-1. Visit `https://x.com/home`
-2. You should see:
-   - ✅ No notification button in the sidebar
-   - ✅ Only the compose tweet area (no timeline)
-   - ✅ No trending topics or suggestions
-3. Try visiting `https://x.com/notifications` - you should be redirected to home
-
-## Customization
-
-You can modify the behavior by editing the configuration in `content.js`:
-
-```javascript
-const config = {
-  removeNotifications: true,    // Hide notification button
-  removeHomeFeed: true,         // Hide home timeline
-  redirectNotifications: true   // Redirect notification pages
-};
-```
-
 ## Files Structure
 
 - `manifest.json` - Extension configuration
 - `content.js` - Main logic for hiding elements
-- `styles.css` - Additional CSS rules
-- `background.js` - Background service worker
 - `popup.html` - Extension popup interface
 
 ## Troubleshooting
 
 - **Changes not appearing**: Refresh the X.com page
 - **Extension not working**: Check if it's enabled in `chrome://extensions/`
-- **Elements still visible**: X.com frequently changes their HTML structure. The extension may need updates to adapt to new layouts.
 
 ## Privacy
 
