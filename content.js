@@ -53,12 +53,7 @@
       }
       
       /* Hide home feed timeline */
-      [data-testid="timeline"] article[data-testid="tweet"],
-      [data-testid="timeline"] div[data-testid="cellInnerDiv"]:not(:has([data-testid="tweetTextarea_0"])),
-      [aria-label*="Home timeline"] article,
-      [aria-label*="Timeline"] article[data-testid="tweet"],
-      article[data-testid="tweet"],
-      [data-testid="primaryColumn"] section[role="region"] > div > div:not(:has([data-testid="tweetTextarea_0"])):not(:has([role="textbox"])):not(:has([data-testid="tweet-text-editor"])) {
+      [aria-label*="Timeline"] {
         display: none !important;
       }
       
@@ -145,7 +140,7 @@
       // Update CSS based on loaded settings
       updateCSS('hideNotifications', config.hideNotifications);
       updateFeedHiding();
-      
+
       // Check for redirect after settings are loaded
       redirectNotificationsToHome();
     });
@@ -174,7 +169,7 @@
   // Redirect notifications page to home (only if enabled)
   function redirectNotificationsToHome() {
     if (!config.redirectNotifications) return;
-    
+
     const currentPath = window.location.pathname;
     if (currentPath === '/notifications' || currentPath.startsWith('/notifications/')) {
       window.location.href = 'https://x.com/home';
@@ -224,11 +219,11 @@
   // Route change detection tied to title changes
   let currentPath = window.location.pathname;
   let routeCheckTimeout = null;
-  
+
   function checkForRouteChange() {
     // Throttle route checks to avoid excessive calls
     if (routeCheckTimeout) return;
-    
+
     routeCheckTimeout = setTimeout(() => {
       if (window.location.pathname !== currentPath) {
         currentPath = window.location.pathname;
