@@ -53,8 +53,11 @@
       }
       
       /* Hide home feed timeline */
+      /* For some reason, display: none causes performance issues */
+      /* the longer the page is open. Likely some JS looking for elements. */
       [aria-label*="Timeline"] {
-        display: none !important;
+        height: 0 !important;
+        overflow: hidden !important;
       }
       
       /* Hide "new posts" notification badge */
