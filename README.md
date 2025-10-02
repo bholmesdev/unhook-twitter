@@ -4,12 +4,14 @@ A Chrome extension that strips down the X.com (Twitter) interface to its bare es
 
 ## Features
 
-- **🔕 Remove Notifications**: Completely removes the notification button from the sidebar across all X.com pages
-- **🔄 Redirect Notifications**: Automatically redirects any notification page visits back to the home page
-- **📝 Compose-Only Home**: Hides the entire home feed, leaving only the compose tweet area visible
-- **🎯 Distraction-Free**: Also removes trending topics and "who to follow" suggestions
+Unhook Twitter is fully configurable from the extension panel.
 
-## Installation
+- **🔕 Hide Notifications**: Removes the notification button from the sidebar
+- **📝 Hide Feeds**: Choose to hide your home feed or all feeds across profiles
+  - Hides the home timeline while keeping the compose area, so you can focus on writing, not consuming.
+  - Also hides trending topics and "who to follow" suggestions.
+
+## Manual Installation
 
 1. Open Chrome and navigate to `chrome://extensions/`
 2. Enable "Developer mode" by toggling the switch in the top right
