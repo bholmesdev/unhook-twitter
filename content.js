@@ -8,7 +8,6 @@
   let config = {
     hideNotifications: true,
     feedHideMode: 'home', // 'none', 'home', 'all'
-    redirectNotifications: true,
     cleanTitle: true
   };
 
@@ -133,19 +132,14 @@
   function loadSettings() {
     chrome.storage.sync.get({
       hideNotifications: true,
-      feedHideMode: 'home', // 'none', 'home', 'all'
-      redirectNotifications: true
+      feedHideMode: 'home' // 'none', 'home', 'all'
     }, function (items) {
       config.hideNotifications = items.hideNotifications;
       config.feedHideMode = items.feedHideMode;
-      config.redirectNotifications = items.redirectNotifications;
 
       // Update CSS based on loaded settings
       updateCSS('hideNotifications', config.hideNotifications);
       updateFeedHiding();
-
-      // Check for redirect after settings are loaded
-      redirectNotificationsToHome();
     });
   }
 
@@ -162,22 +156,7 @@
         updateFeedHiding();
       }
     }
-
-    if (request.action === 'updateSettings') {
-      const settings = request.settings;
-      config.redirectNotifications = settings.redirectNotifications;
-    }
   });
-
-  // Redirect notifications page to home (only if enabled)
-  function redirectNotificationsToHome() {
-    if (!config.redirectNotifications) return;
-
-    const currentPath = window.location.pathname;
-    if (currentPath === '/notifications' || currentPath.startsWith('/notifications/')) {
-      window.location.href = 'https://x.com/home';
-    }
-  }
 
 
   // Clean page title to remove notification count
